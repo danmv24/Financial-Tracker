@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: /changes/create_table_transactions.sql
+      relativeToChangelogFile: true
