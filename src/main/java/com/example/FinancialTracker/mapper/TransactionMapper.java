@@ -5,14 +5,15 @@ import com.example.FinancialTracker.enums.TransactionType;
 import com.example.FinancialTracker.form.TransactionForm;
 import com.example.FinancialTracker.view.TransactionView;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class TransactionMapper {
 
     public static TransactionEntity toEntity(TransactionForm transactionForm) {
         return TransactionEntity.builder()
-                .transactionType(String.valueOf(TransactionType.EXPENSE))
-                .amount(transactionForm.getAmount())
+                .transactionType(transactionForm.getAmount().compareTo(BigDecimal.ZERO) > 0 ? String.valueOf(TransactionType.INCOME) : String.valueOf(TransactionType.EXPENSE))
+                .amount(transactionForm.getAmount().abs())
                 .date(LocalDate.parse(transactionForm.getDate()))
                 .build();
     }
