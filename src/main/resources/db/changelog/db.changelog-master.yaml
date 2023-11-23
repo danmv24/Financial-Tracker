@@ -2,3 +2,15 @@ databaseChangeLog:
   - include:
       file: /changes/create_table_transactions.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: /changes/add_category_id_to_transactions.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: /changes/create_table_categories.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: /changes/add_foreign_key_to_transactions.sql
+      relativeToChangelogFile: true
