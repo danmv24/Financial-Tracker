@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,5 +59,15 @@ public class DefaultTransactionService implements TransactionService {
 
         return transactionsByType;
 
+    }
+
+    @Override
+    public void delete(Long id) {
+        Optional<TransactionEntity> transaction = transactionRepository.findById(id);
+        if (transaction.isPresent()) {
+            transactionRepository.delete(transaction.get());
+        } else {
+            throw new TransactionException(HttpStatus.NOT_FOUND, "Transaction with id " + id + " does not exist");
+        }
     }
 }

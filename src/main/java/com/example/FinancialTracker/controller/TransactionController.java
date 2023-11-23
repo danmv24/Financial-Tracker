@@ -31,4 +31,9 @@ public class TransactionController {
     public Map<String, List<TransactionView>> getAllTransactionsByType() {
         return transactionService.allTransactionsByType();
     }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteTransaction(@PathVariable(value = "id") Long id) {
+        transactionService.delete(id);
+    }
 }

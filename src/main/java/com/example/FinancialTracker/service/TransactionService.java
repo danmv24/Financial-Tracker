@@ -14,4 +14,6 @@ public interface TransactionService {
 
     Map<String, List<TransactionView>> allTransactionsByType();
 
+    void delete(Long id);
+
 }
