@@ -23,6 +23,10 @@ public class TransactionEntity {
     @NotNull
     private String transactionType;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
+
     @NotNull
     private BigDecimal amount;
 
