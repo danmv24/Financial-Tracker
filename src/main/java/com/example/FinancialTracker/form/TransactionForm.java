@@ -4,8 +4,6 @@ package com.example.FinancialTracker.form;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +11,8 @@ import java.util.Date;
 @Setter
 @Builder
 public class TransactionForm {
+
+    private String categoryName;
 
     private BigDecimal amount;
 
