@@ -1,10 +1,13 @@
 package com.example.FinancialTracker.service.impl;
 
+import com.example.FinancialTracker.entity.CategoryEntity;
 import com.example.FinancialTracker.entity.TransactionEntity;
 import com.example.FinancialTracker.enums.TransactionType;
 import com.example.FinancialTracker.exception.TransactionException;
 import com.example.FinancialTracker.form.TransactionForm;
+import com.example.FinancialTracker.mapper.CategoryMapper;
 import com.example.FinancialTracker.mapper.TransactionMapper;
+import com.example.FinancialTracker.repository.CategoryRepository;
 import com.example.FinancialTracker.repository.TransactionRepository;
 import com.example.FinancialTracker.service.TransactionService;
 import com.example.FinancialTracker.view.TransactionView;
@@ -22,13 +25,22 @@ public class DefaultTransactionService implements TransactionService {
 
     private TransactionRepository transactionRepository;
 
+    private CategoryRepository categoryRepository;
+
     @Override
     public void addTransaction(TransactionForm transactionForm) {
         if (transactionForm.getAmount().compareTo(BigDecimal.ZERO) == 0) {
             throw new TransactionException(HttpStatus.BAD_REQUEST, "Amount cannot be zero");
         }
 
-        transactionRepository.save(TransactionMapper.toEntity(transactionForm));
+        Optional<CategoryEntity> categoryOptional = categoryRepository.findByCategoryName(transactionForm.getCategoryName());
+
+        if (categoryOptional.isPresent()) {
+            transactionRepository.save(TransactionMapper.toEntity(transactionForm, categoryOptional.get()));
+        } else {
+            CategoryEntity category = categoryRepository.save(CategoryMapper.toEntity(transactionForm));
+            transactionRepository.save(TransactionMapper.toEntity(transactionForm, category));
+        }
     }
 
     @Override
