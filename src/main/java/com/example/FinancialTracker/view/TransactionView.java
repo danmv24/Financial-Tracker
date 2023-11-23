@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @Builder
 public class TransactionView {
 
+    private Long transactionId;
+
     private String transactionType;
 
     private BigDecimal amount;
