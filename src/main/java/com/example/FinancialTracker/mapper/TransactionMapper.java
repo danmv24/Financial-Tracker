@@ -20,6 +20,7 @@ public class TransactionMapper {
 
     public static TransactionView toView(TransactionEntity transactionEntity) {
         return TransactionView.builder()
+                .id(transactionEntity.getId())
                 .transactionType(transactionEntity.getTransactionType())
                 .amount(transactionEntity.getAmount())
                 .date(transactionEntity.getDate().toString())
