@@ -1,5 +1,6 @@
 package com.example.FinancialTracker.mapper;
 
+import com.example.FinancialTracker.entity.CategoryEntity;
 import com.example.FinancialTracker.entity.TransactionEntity;
 import com.example.FinancialTracker.enums.TransactionType;
 import com.example.FinancialTracker.form.TransactionForm;
@@ -10,9 +11,10 @@ import java.time.LocalDate;
 
 public class TransactionMapper {
 
-    public static TransactionEntity toEntity(TransactionForm transactionForm) {
+    public static TransactionEntity toEntity(TransactionForm transactionForm, CategoryEntity category) {
         return TransactionEntity.builder()
                 .transactionType(transactionForm.getAmount().compareTo(BigDecimal.ZERO) > 0 ? String.valueOf(TransactionType.INCOME) : String.valueOf(TransactionType.EXPENSE))
+                .category(category)
                 .amount(transactionForm.getAmount().abs())
                 .date(LocalDate.parse(transactionForm.getDate()))
                 .build();
