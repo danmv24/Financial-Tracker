@@ -18,4 +18,6 @@ public class TransactionForm {
 
     private String date;
 
+    private String comment;
+
 }

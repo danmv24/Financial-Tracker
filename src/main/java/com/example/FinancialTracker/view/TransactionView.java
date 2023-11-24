@@ -21,4 +21,6 @@ public class TransactionView {
 
     private String date;
 
+    private String comment;
+
 }

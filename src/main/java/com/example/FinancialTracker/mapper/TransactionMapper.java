@@ -17,6 +17,7 @@ public class TransactionMapper {
                 .category(category)
                 .amount(transactionForm.getAmount().abs())
                 .date(LocalDate.parse(transactionForm.getDate()))
+                .comment(transactionForm.getComment())
                 .build();
     }
 
@@ -26,6 +27,7 @@ public class TransactionMapper {
                 .transactionType(transactionEntity.getTransactionType())
                 .amount(transactionEntity.getAmount())
                 .date(transactionEntity.getDate().toString())
+                .comment(transactionEntity.getComment())
                 .build();
     }
 

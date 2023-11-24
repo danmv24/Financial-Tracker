@@ -32,4 +32,7 @@ public class TransactionEntity {
 
     @NotNull
     private LocalDate date;
+
+    @NotNull
+    private String comment;
 }
