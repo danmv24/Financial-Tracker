@@ -2,7 +2,6 @@ package com.example.FinancialTracker.service.impl;
 
 import com.example.FinancialTracker.entity.CategoryEntity;
 import com.example.FinancialTracker.entity.TransactionEntity;
-import com.example.FinancialTracker.enums.TransactionType;
 import com.example.FinancialTracker.exception.TransactionException;
 import com.example.FinancialTracker.form.TransactionForm;
 import com.example.FinancialTracker.mapper.CategoryMapper;
