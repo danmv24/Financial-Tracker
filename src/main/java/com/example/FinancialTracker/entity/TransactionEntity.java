@@ -27,12 +27,12 @@ public class TransactionEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
-    @NotNull
+    @NotNull(message = "The amount cannot be empty")
     private BigDecimal amount;
 
-    @NotNull
+    @NotNull(message = "The date cannot be empty")
     private LocalDate date;
 
-    @NotNull
+    @NotNull(message = "The comment cannot be empty")
     private String comment;
 }

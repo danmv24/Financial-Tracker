@@ -1,1 +1,1 @@
-ALTER TABLE transactions ADD comment TEXT;
+ALTER TABLE transactions ADD comment TEXT NOT NULL;
