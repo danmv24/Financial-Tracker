@@ -27,6 +27,10 @@ public class TransactionEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     @NotNull(message = "The amount cannot be empty")
     private BigDecimal amount;
 
