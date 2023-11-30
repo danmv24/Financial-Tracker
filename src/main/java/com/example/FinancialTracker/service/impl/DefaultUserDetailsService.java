@@ -19,6 +19,6 @@ public class DefaultUserDetailsService implements UserDetailsService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username " +username+" not found!"));
 
-        return new DefaultUserDetails(user);
+        return DefaultUserDetails.build(user);
     }
 }
