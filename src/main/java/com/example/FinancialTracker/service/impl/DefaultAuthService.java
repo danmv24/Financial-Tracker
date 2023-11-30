@@ -27,8 +27,6 @@ public class DefaultAuthService implements AuthService {
 
     private final UserRepository userRepository;
 
-    private final DefaultUserDetailsService userDetailsService;
-
     @Override
     public void create(UserForm userForm) {
         if (userRepository.existsByUsername(userForm.getUsername())) {
