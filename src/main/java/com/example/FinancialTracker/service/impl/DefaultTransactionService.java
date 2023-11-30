@@ -2,32 +2,50 @@ package com.example.FinancialTracker.service.impl;
 
 import com.example.FinancialTracker.entity.CategoryEntity;
 import com.example.FinancialTracker.entity.TransactionEntity;
+import com.example.FinancialTracker.entity.UserEntity;
 import com.example.FinancialTracker.exception.TransactionException;
 import com.example.FinancialTracker.form.TransactionForm;
 import com.example.FinancialTracker.mapper.CategoryMapper;
 import com.example.FinancialTracker.mapper.TransactionMapper;
 import com.example.FinancialTracker.repository.CategoryRepository;
 import com.example.FinancialTracker.repository.TransactionRepository;
+import com.example.FinancialTracker.repository.UserRepository;
+import com.example.FinancialTracker.service.TokenService;
 import com.example.FinancialTracker.service.TransactionService;
 import com.example.FinancialTracker.view.TransactionView;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class DefaultTransactionService implements TransactionService {
 
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
-    private CategoryRepository categoryRepository;
+    private final TokenService tokenService;
+
+    private final UserRepository userRepository;
+
+    private final CategoryRepository categoryRepository;
 
     @Override
-    public void addTransaction(TransactionForm transactionForm) {
+    public void addTransaction(TransactionForm transactionForm, HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        String token = headerAuth.substring(7, headerAuth.length());
+
+        String username = tokenService.parseToken(token);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username " +username+" not found!"));
+
         if (transactionForm.getAmount().compareTo(BigDecimal.ZERO) == 0) {
             throw new TransactionException(HttpStatus.BAD_REQUEST, "Amount cannot be zero");
         }
@@ -35,10 +53,10 @@ public class DefaultTransactionService implements TransactionService {
         Optional<CategoryEntity> categoryOptional = categoryRepository.findByCategoryName(transactionForm.getCategoryName());
 
         if (categoryOptional.isPresent()) {
-            transactionRepository.save(TransactionMapper.toEntity(transactionForm, categoryOptional.get()));
+            transactionRepository.save(TransactionMapper.toEntity(transactionForm, categoryOptional.get(), user));
         } else {
             CategoryEntity category = categoryRepository.save(CategoryMapper.toEntity(transactionForm));
-            transactionRepository.save(TransactionMapper.toEntity(transactionForm, category));
+            transactionRepository.save(TransactionMapper.toEntity(transactionForm, category, user));
         }
     }
 
