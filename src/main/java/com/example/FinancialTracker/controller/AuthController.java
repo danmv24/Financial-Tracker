@@ -2,6 +2,7 @@ package com.example.FinancialTracker.controller;
 
 import com.example.FinancialTracker.form.UserForm;
 import com.example.FinancialTracker.service.AuthService;
+import com.example.FinancialTracker.view.JwtView;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,5 +19,10 @@ public class AuthController {
     @PostMapping("/signup")
     public void signUp(@RequestPart("user") UserForm userForm) {
         authService.create(userForm);
+    }
+
+    @PostMapping("/login")
+    public JwtView login(@RequestPart("user") UserForm userForm) {
+        return authService.authenticateUser(userForm);
     }
 }
