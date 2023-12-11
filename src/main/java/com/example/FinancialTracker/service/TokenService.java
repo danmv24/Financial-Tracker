@@ -1,6 +1,9 @@
 package com.example.FinancialTracker.service;
 
+import com.example.FinancialTracker.entity.UserEntity;
 import com.example.FinancialTracker.service.impl.DefaultUserDetails;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface TokenService {
 
@@ -8,6 +11,6 @@ public interface TokenService {
 
     String generateRefreshToken(DefaultUserDetails userDetails);
 
-    String parseToken(String token);
+    UserEntity parseToken(HttpServletRequest request);
 
 }
