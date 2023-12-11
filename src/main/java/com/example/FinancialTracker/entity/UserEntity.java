@@ -3,7 +3,7 @@ package com.example.FinancialTracker.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Entity(name = "users")
 @Getter
@@ -17,17 +17,17 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username",unique = true)
-    @NotNull
+    @Column(unique = true)
+    @NotBlank(message = "Username can't be null!")
     private String username;
 
-    @NotNull
+    @NotBlank(message = "Name can't be null!")
     private String name;
 
-    @NotNull
+    @NotBlank(message = "Surname can't be null!")
     private String surname;
 
-    @NotNull
+    @NotBlank(message = "Password can't be null!")
     private String password;
 
 }

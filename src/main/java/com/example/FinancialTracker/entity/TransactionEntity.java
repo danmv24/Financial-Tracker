@@ -1,8 +1,10 @@
 package com.example.FinancialTracker.entity;
 
+import com.example.FinancialTracker.enums.TransactionType;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,8 +22,8 @@ public class TransactionEntity {
     private Long id;
 
     @Column(name = "transaction_type")
-    @NotNull
-    private String transactionType;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -31,12 +33,14 @@ public class TransactionEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @NotNull(message = "The amount cannot be empty")
+    @NotNull
+    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
-    @NotNull(message = "The date cannot be empty")
+    @NotNull
+    @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @NotNull(message = "The comment cannot be empty")
+    @NotBlank(message = "The comment can't be empty")
     private String comment;
 }

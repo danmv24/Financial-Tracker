@@ -3,7 +3,7 @@ package com.example.FinancialTracker.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Entity(name = "categories")
 @Getter
@@ -17,8 +17,8 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category_name")
-    @NotNull
+    @Column(name = "category_name", nullable = false)
+    @NotBlank
     private String categoryName;
 
 }
