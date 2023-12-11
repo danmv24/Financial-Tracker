@@ -1,5 +1,6 @@
 package com.example.FinancialTracker.view;
 
+import com.example.FinancialTracker.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class TransactionView {
 
     private Long id;
 
-    private String transactionType;
+    private TransactionType transactionType;
 
     private BigDecimal amount;
 
