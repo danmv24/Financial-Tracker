@@ -1,13 +1,17 @@
 package com.example.FinancialTracker.service.impl;
 
+import com.example.FinancialTracker.entity.UserEntity;
+import com.example.FinancialTracker.repository.UserRepository;
 import com.example.FinancialTracker.service.TokenService;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -17,6 +21,8 @@ import java.time.temporal.ChronoUnit;
 public class DefaultTokenService implements TokenService {
 
     private final JwtEncoder jwtEncoder;
+
+    private final UserRepository userRepository;
 
     @Override
     public String generateAccessToken(DefaultUserDetails userDetails) {
@@ -47,10 +53,13 @@ public class DefaultTokenService implements TokenService {
     }
 
     @Override
-    public String parseToken(String token) {
+    public UserEntity parseToken(HttpServletRequest request) {
         try {
+            String headerAuth = request.getHeader("Authorization");
+            String token = headerAuth.substring(7);
             SignedJWT decodedJWT = SignedJWT.parse(token);
-            return decodedJWT.getJWTClaimsSet().getSubject();
+            String username = decodedJWT.getJWTClaimsSet().getSubject();
+            return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username " +username+" not found!"));
         } catch (ParseException e) {
             e.printStackTrace();
         }

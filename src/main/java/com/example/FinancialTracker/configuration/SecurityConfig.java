@@ -1,6 +1,5 @@
 package com.example.FinancialTracker.configuration;
 
-import com.example.FinancialTracker.service.impl.DefaultTokenService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -60,11 +59,6 @@ public class SecurityConfig {
     @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeys.getPublicKey()).build();
-    }
-
-    @Bean
-    DefaultTokenService tokenService() {
-        return new DefaultTokenService(jwtEncoder());
     }
 
 
