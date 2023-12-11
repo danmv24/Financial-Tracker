@@ -1,5 +1,6 @@
 package com.example.FinancialTracker.service;
 
+import com.example.FinancialTracker.enums.TransactionType;
 import com.example.FinancialTracker.form.TransactionForm;
 import com.example.FinancialTracker.view.TransactionView;
 
@@ -11,10 +12,10 @@ public interface TransactionService {
 
     void addTransaction(TransactionForm transactionForm, HttpServletRequest request);
 
-    List<TransactionView> allTransactions();
+    List<TransactionView> allTransactions(HttpServletRequest request);
 
-    Map<String, List<TransactionView>> allTransactionsByType();
+    Map<TransactionType, List<TransactionView>> allTransactionsByType(HttpServletRequest request);
 
-    void delete(Long id);
+    void delete(Long id, HttpServletRequest request);
 
 }

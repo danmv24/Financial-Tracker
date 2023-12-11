@@ -3,24 +3,22 @@ package com.example.FinancialTracker.service.impl;
 import com.example.FinancialTracker.entity.CategoryEntity;
 import com.example.FinancialTracker.entity.TransactionEntity;
 import com.example.FinancialTracker.entity.UserEntity;
+import com.example.FinancialTracker.enums.TransactionType;
 import com.example.FinancialTracker.exception.TransactionException;
 import com.example.FinancialTracker.form.TransactionForm;
 import com.example.FinancialTracker.mapper.CategoryMapper;
 import com.example.FinancialTracker.mapper.TransactionMapper;
 import com.example.FinancialTracker.repository.CategoryRepository;
 import com.example.FinancialTracker.repository.TransactionRepository;
-import com.example.FinancialTracker.repository.UserRepository;
 import com.example.FinancialTracker.service.TokenService;
 import com.example.FinancialTracker.service.TransactionService;
 import com.example.FinancialTracker.view.TransactionView;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,17 +32,11 @@ public class DefaultTransactionService implements TransactionService {
 
     private final TokenService tokenService;
 
-    private final UserRepository userRepository;
-
     private final CategoryRepository categoryRepository;
 
     @Override
     public void addTransaction(TransactionForm transactionForm, HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        String token = headerAuth.substring(7, headerAuth.length());
-
-        String username = tokenService.parseToken(token);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username " +username+" not found!"));
+        UserEntity user = tokenService.parseToken(request);
 
         if (transactionForm.getAmount().compareTo(BigDecimal.ZERO) == 0) {
             throw new TransactionException(HttpStatus.BAD_REQUEST, "Amount cannot be zero");
@@ -61,42 +53,43 @@ public class DefaultTransactionService implements TransactionService {
     }
 
     @Override
-    public List<TransactionView> allTransactions() {
-        List<TransactionEntity> transactions = transactionRepository.findAll();
+    public List<TransactionView> allTransactions(HttpServletRequest request) {
+        UserEntity user = tokenService.parseToken(request);
 
-        List<TransactionView> transactionViews = new ArrayList<>();
+        List<TransactionEntity> transactions = transactionRepository.findAllByUserId(user.getId());
 
-        for (TransactionEntity transaction : transactions) {
-            transactionViews.add(TransactionMapper.toView(transaction));
-        }
-
-        return transactionViews;
+        return transactions.stream()
+                .map(TransactionMapper::toView)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Map<String, List<TransactionView>> allTransactionsByType() {
-        List<TransactionEntity> transactions = transactionRepository.findAll();
+    public Map<TransactionType, List<TransactionView>> allTransactionsByType(HttpServletRequest request) {
+        UserEntity user = tokenService.parseToken(request);
 
-        List<TransactionView> transactionViews = new ArrayList<>();
+        List<TransactionEntity> transactions = transactionRepository.findAllByUserId(user.getId());
 
-        for (TransactionEntity transaction : transactions) {
-            transactionViews.add(TransactionMapper.toView(transaction));
-        }
+        List<TransactionView> transactionViews = transactions.stream()
+                .map(TransactionMapper::toView)
+                .collect(Collectors.toList());
 
-        Map<String, List<TransactionView>> transactionsByType = transactionViews.stream()
+        return transactionViews.stream()
                 .collect(Collectors.groupingBy(TransactionView::getTransactionType));
 
-        return transactionsByType;
-
     }
 
     @Override
-    public void delete(Long id) {
-        Optional<TransactionEntity> transaction = transactionRepository.findById(id);
-        if (transaction.isPresent()) {
-            transactionRepository.delete(transaction.get());
-        } else {
-            throw new TransactionException(HttpStatus.NOT_FOUND, "Transaction with id " + id + " does not exist");
+    public void delete(Long id, HttpServletRequest request) {
+        UserEntity user = tokenService.parseToken(request);
+
+        TransactionEntity transaction = transactionRepository.findById(id).orElseThrow(
+                () -> new TransactionException(HttpStatus.NOT_FOUND, "Transaction with id " + id + " does not exist"));
+
+        if (!user.getId().equals(transaction.getUser().getId())) {
+            throw new TransactionException(HttpStatus.FORBIDDEN, "User does not have permission to delete this transaction");
         }
+
+        transactionRepository.delete(transaction);
+
     }
 }
