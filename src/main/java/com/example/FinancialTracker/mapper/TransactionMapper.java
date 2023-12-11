@@ -14,7 +14,7 @@ public class TransactionMapper {
 
     public static TransactionEntity toEntity(TransactionForm transactionForm, CategoryEntity category, UserEntity user) {
         return TransactionEntity.builder()
-                .transactionType(transactionForm.getAmount().compareTo(BigDecimal.ZERO) > 0 ? String.valueOf(TransactionType.INCOME) : String.valueOf(TransactionType.EXPENSE))
+                .transactionType(transactionForm.getAmount().compareTo(BigDecimal.ZERO) > 0 ? TransactionType.INCOME : TransactionType.EXPENSE)
                 .category(category)
                 .user(user)
                 .amount(transactionForm.getAmount().abs())
