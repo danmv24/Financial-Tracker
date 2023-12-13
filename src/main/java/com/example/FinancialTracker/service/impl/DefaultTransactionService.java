@@ -3,7 +3,6 @@ package com.example.FinancialTracker.service.impl;
 import com.example.FinancialTracker.entity.CategoryEntity;
 import com.example.FinancialTracker.entity.TransactionEntity;
 import com.example.FinancialTracker.entity.UserEntity;
-import com.example.FinancialTracker.enums.TransactionType;
 import com.example.FinancialTracker.exception.TransactionException;
 import com.example.FinancialTracker.form.TransactionForm;
 import com.example.FinancialTracker.mapper.CategoryMapper;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -61,21 +59,6 @@ public class DefaultTransactionService implements TransactionService {
         return transactions.stream()
                 .map(TransactionMapper::toView)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Map<TransactionType, List<TransactionView>> allTransactionsByType(HttpServletRequest request) {
-        UserEntity user = tokenService.parseToken(request);
-
-        List<TransactionEntity> transactions = transactionRepository.findAllByUserId(user.getId());
-
-        List<TransactionView> transactionViews = transactions.stream()
-                .map(TransactionMapper::toView)
-                .collect(Collectors.toList());
-
-        return transactionViews.stream()
-                .collect(Collectors.groupingBy(TransactionView::getTransactionType));
-
     }
 
     @Override
