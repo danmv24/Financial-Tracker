@@ -11,6 +11,6 @@ public interface TransactionRepository extends CrudRepository<TransactionEntity,
 
     List<TransactionEntity> findAll();
 
-    List<TransactionEntity> findAllByUserId(Long id);
+    List<TransactionEntity> findAllByUserIdOrderByDateDesc(Long id);
 
 }
