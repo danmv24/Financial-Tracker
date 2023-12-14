@@ -14,9 +14,9 @@ import java.math.BigDecimal;
 @Builder
 public class TransactionView {
 
-    private Long id;
-
     private TransactionType transactionType;
+
+    private String category;
 
     private BigDecimal amount;
 
