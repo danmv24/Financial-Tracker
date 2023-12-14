@@ -1,11 +1,9 @@
 package com.example.FinancialTracker.service.impl;
 
-import com.example.FinancialTracker.entity.UserEntity;
 import com.example.FinancialTracker.repository.UserRepository;
 import com.example.FinancialTracker.service.TokenService;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -53,13 +51,13 @@ public class DefaultTokenService implements TokenService {
     }
 
     @Override
-    public UserEntity parseToken(HttpServletRequest request) {
+    public Long parseToken(HttpServletRequest request) {
         try {
             String headerAuth = request.getHeader("Authorization");
             String token = headerAuth.substring(7);
             SignedJWT decodedJWT = SignedJWT.parse(token);
             String username = decodedJWT.getJWTClaimsSet().getSubject();
-            return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username " +username+" not found!"));
+            return userRepository.findByUsername(username).get().getId();
         } catch (ParseException e) {
             e.printStackTrace();
         }
