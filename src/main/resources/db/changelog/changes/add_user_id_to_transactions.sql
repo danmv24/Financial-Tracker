@@ -1,1 +1,0 @@
-ALTER TABLE transactions ADD user_id BIGINT;
