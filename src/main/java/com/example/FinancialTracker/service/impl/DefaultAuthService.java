@@ -6,9 +6,10 @@ import com.example.FinancialTracker.mapper.UserMapper;
 import com.example.FinancialTracker.repository.UserRepository;
 import com.example.FinancialTracker.service.AuthService;
 import com.example.FinancialTracker.service.TokenService;
-import com.example.FinancialTracker.view.JwtView;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,7 +39,7 @@ public class DefaultAuthService implements AuthService {
     }
 
     @Override
-    public JwtView authenticateUser(UserForm userForm) {
+    public ResponseEntity<String> authenticateUser(UserForm userForm) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword()));
 
@@ -47,10 +48,11 @@ public class DefaultAuthService implements AuthService {
         String accessToken = tokenService.generateAccessToken(userDetails);
         String refreshToken = tokenService.generateRefreshToken(userDetails);
 
-        return JwtView.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization","Bearer " + accessToken);
+        httpHeaders.add("Refresh-Token", "Refresh " + refreshToken);
+
+        return new ResponseEntity<>("Login successful", httpHeaders, HttpStatus.OK);
     }
 
 
