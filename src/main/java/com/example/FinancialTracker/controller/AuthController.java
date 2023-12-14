@@ -2,8 +2,8 @@ package com.example.FinancialTracker.controller;
 
 import com.example.FinancialTracker.form.UserForm;
 import com.example.FinancialTracker.service.AuthService;
-import com.example.FinancialTracker.view.JwtView;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -22,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public JwtView login(@RequestPart("user") UserForm userForm) {
+    public ResponseEntity<String> login(@RequestPart("user") UserForm userForm) {
         return authService.authenticateUser(userForm);
     }
 }
