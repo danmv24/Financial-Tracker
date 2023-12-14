@@ -25,13 +25,13 @@ public class TransactionEntity {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private CategoryEntity category;
+    @NotNull
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @NotNull
     @Column(name = "amount", nullable = false)
