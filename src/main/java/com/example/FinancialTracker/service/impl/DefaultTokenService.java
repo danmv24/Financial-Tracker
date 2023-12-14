@@ -29,7 +29,7 @@ public class DefaultTokenService implements TokenService {
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(2, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(10, ChronoUnit.MINUTES))
                 .subject(userDetails.getUsername())
                 .build();
 
@@ -43,7 +43,7 @@ public class DefaultTokenService implements TokenService {
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(10, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(20, ChronoUnit.MINUTES))
                 .subject(userDetails.getUsername())
                 .build();
 
